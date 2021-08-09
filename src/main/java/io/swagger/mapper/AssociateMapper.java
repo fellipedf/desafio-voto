@@ -2,14 +2,24 @@ package io.swagger.mapper;
 
 import io.swagger.entity.AssociateEntity;
 import io.swagger.model.Associate;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+@Component
+public class AssociateMapper {
 
-@Mapper(componentModel = "spring")
-public interface AssociateMapper {
+    public AssociateEntity toEntity(Associate associate) {
+        return AssociateEntity.builder()
+                .name(associate.getName())
+                .cpfCnpj(associate.getCpfCnpj())
+                .build();
+    }
 
-    AssociateEntity toEntity(Associate associate);
+    public Associate map(AssociateEntity associateEntity) {
+        return  Associate.builder()
+                .id(associateEntity.getAssociateId())
+                .name(associateEntity.getName())
+                .cpfCnpj(associateEntity.getCpfCnpj())
+                .build();
+    }
 
-    Associate map(AssociateEntity byId);
 }

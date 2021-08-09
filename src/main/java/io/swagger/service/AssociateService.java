@@ -1,9 +1,16 @@
 package io.swagger.service;
 
+import io.swagger.api.ApiException;
+import io.swagger.entity.AssociateEntity;
 import io.swagger.mapper.AssociateMapper;
 import io.swagger.model.Associate;
 import io.swagger.repository.AssociateRepository;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 
 @Service
 public class AssociateService {
@@ -23,8 +30,21 @@ public class AssociateService {
         repository.deleteById(Long.valueOf(id));
     }
 
-    public Associate findAssociateById(String id) {
-        repository.findById(Long.valueOf(id));
-        return associateMapper.map(repository.findById(Long.valueOf(id)));
+    public Associate findAssociateById(String id) throws ApiException {
+        Optional<AssociateEntity> associateEntity = repository.findById(Long.valueOf(id));
+        if (associateEntity.isPresent()) {
+            return associateMapper.map(associateEntity.get());
+        }
+        throw new ApiException(201, "Usuario não encontado");
+    }
+
+
+    public List<Associate> findAll() {
+        Iterable<AssociateEntity> all = repository.findAll();
+        List<Associate> listReturn = new ArrayList<>();
+        for (AssociateEntity a : all) {
+            listReturn.add(associateMapper.map(a));
+        }
+        return listReturn;
     }
 }

@@ -3,11 +3,12 @@ package io.swagger.model;
 import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.model.Associate;
-import io.swagger.model.Item;
+import io.swagger.model.VoteItem;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Builder;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.*;
@@ -17,19 +18,22 @@ import javax.validation.constraints.*;
  */
 @Schema(description = "Represents the Vote")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-06T16:28:41.873Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-09T21:12:03.154Z[GMT]")
 
-
+@Builder
 public class Vote   {
   @JsonProperty("id")
   private Long id = null;
 
-  @JsonProperty("associate")
-  private Associate associate = null;
+  @JsonProperty("associateId")
+  private Long associateId = null;
+
+  @JsonProperty("meetingAgendaId")
+  private Long meetingAgendaId = null;
 
   @JsonProperty("items")
   @Valid
-  private List<Item> items = null;
+  private List<VoteItem> items = null;
 
   public Vote id(Long id) {
     this.id = id;
@@ -50,35 +54,54 @@ public class Vote   {
     this.id = id;
   }
 
-  public Vote associate(Associate associate) {
-    this.associate = associate;
+  public Vote associateId(Long associateId) {
+    this.associateId = associateId;
     return this;
   }
 
   /**
-   * Get associate
-   * @return associate
+   * Get associateId
+   * @return associateId
    **/
-  @Schema(required = true, description = "")
+  @Schema(required = true, accessMode = Schema.AccessMode.READ_ONLY, description = "")
       @NotNull
 
-    @Valid
-    public Associate getAssociate() {
-    return associate;
+    public Long getAssociateId() {
+    return associateId;
   }
 
-  public void setAssociate(Associate associate) {
-    this.associate = associate;
+  public void setAssociateId(Long associateId) {
+    this.associateId = associateId;
   }
 
-  public Vote items(List<Item> items) {
+  public Vote meetingAgendaId(Long meetingAgendaId) {
+    this.meetingAgendaId = meetingAgendaId;
+    return this;
+  }
+
+  /**
+   * Get meetingAgendaId
+   * @return meetingAgendaId
+   **/
+  @Schema(required = true, accessMode = Schema.AccessMode.READ_ONLY, description = "")
+      @NotNull
+
+    public Long getMeetingAgendaId() {
+    return meetingAgendaId;
+  }
+
+  public void setMeetingAgendaId(Long meetingAgendaId) {
+    this.meetingAgendaId = meetingAgendaId;
+  }
+
+  public Vote items(List<VoteItem> items) {
     this.items = items;
     return this;
   }
 
-  public Vote addItemsItem(Item itemsItem) {
+  public Vote addItemsItem(VoteItem itemsItem) {
     if (this.items == null) {
-      this.items = new ArrayList<Item>();
+      this.items = new ArrayList<VoteItem>();
     }
     this.items.add(itemsItem);
     return this;
@@ -90,17 +113,17 @@ public class Vote   {
    **/
   @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Meeting Agenda Items")
       @Valid
-    public List<Item> getItems() {
+    public List<VoteItem> getItems() {
     return items;
   }
 
-  public void setItems(List<Item> items) {
+  public void setItems(List<VoteItem> items) {
     this.items = items;
   }
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -109,13 +132,14 @@ public class Vote   {
     }
     Vote vote = (Vote) o;
     return Objects.equals(this.id, vote.id) &&
-        Objects.equals(this.associate, vote.associate) &&
+        Objects.equals(this.associateId, vote.associateId) &&
+        Objects.equals(this.meetingAgendaId, vote.meetingAgendaId) &&
         Objects.equals(this.items, vote.items);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, associate, items);
+    return Objects.hash(id, associateId, meetingAgendaId, items);
   }
 
   @Override
@@ -124,7 +148,8 @@ public class Vote   {
     sb.append("class Vote {\n");
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    associate: ").append(toIndentedString(associate)).append("\n");
+    sb.append("    associateId: ").append(toIndentedString(associateId)).append("\n");
+    sb.append("    meetingAgendaId: ").append(toIndentedString(meetingAgendaId)).append("\n");
     sb.append("    items: ").append(toIndentedString(items)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -134,7 +159,7 @@ public class Vote   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

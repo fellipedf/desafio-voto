@@ -1,37 +1,15 @@
 package io.swagger.api;
 
-import io.swagger.model.Error;
 import io.swagger.model.Item;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.service.ItemService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.*;
-import javax.validation.Valid;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-06T16:28:41.873Z[GMT]")
 @RestController
@@ -43,48 +21,34 @@ public class ItemsApiController implements ItemsApi {
 
     private final HttpServletRequest request;
 
+    private final ItemService service;
+
     @org.springframework.beans.factory.annotation.Autowired
-    public ItemsApiController(ObjectMapper objectMapper, HttpServletRequest request) {
+    public ItemsApiController(ObjectMapper objectMapper, HttpServletRequest request, ItemService service) {
         this.objectMapper = objectMapper;
         this.request = request;
+        this.service = service;
     }
 
-    public ResponseEntity<Item> findItemById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Item>(objectMapper.readValue("{\n  \"description\" : \"Description name of item\",\n  \"id\" : 6,\n  \"vote\" : \"No\"\n}", Item.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Item>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<Item>(HttpStatus.NOT_IMPLEMENTED);
+    @Override
+    public ResponseEntity<Item> findItemById(String id) throws ApiException {
+        return ResponseEntity.ok(service.findItemById(id));
     }
 
-    public ResponseEntity<Item> findItems(@Parameter(in = ParameterIn.QUERY, description = "Product name" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name) {
-        String accept = request.getHeader("Accept");
-        if (accept != null && accept.contains("application/json")) {
-            try {
-                return new ResponseEntity<Item>(objectMapper.readValue("{\n  \"description\" : \"Description name of item\",\n  \"id\" : 6,\n  \"vote\" : \"No\"\n}", Item.class), HttpStatus.NOT_IMPLEMENTED);
-            } catch (IOException e) {
-                log.error("Couldn't serialize response for content type application/json", e);
-                return new ResponseEntity<Item>(HttpStatus.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        return new ResponseEntity<Item>(HttpStatus.NOT_IMPLEMENTED);
+    @Override
+    public ResponseEntity<List<Item>> findItems(String name) {
+        return ResponseEntity.ok().body(service.findAll());
     }
 
-    public ResponseEntity<Void> insertItem(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Item body) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    @Override
+    public ResponseEntity<Void> insertItem(Item body) {
+        service.save(body);
+        return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> removeItem(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) {
-        String accept = request.getHeader("Accept");
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    @Override
+    public ResponseEntity<Void> removeItem(String id) {
+        service.delete(id);
+        return ResponseEntity.noContent().build();
     }
-
 }
