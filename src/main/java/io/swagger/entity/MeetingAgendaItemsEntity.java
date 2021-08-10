@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -25,5 +26,7 @@ public class MeetingAgendaItemsEntity {
     private List<ItemEntity> items;
 
     private Status status;
+
+    private LocalDateTime finishTime;
 
 }

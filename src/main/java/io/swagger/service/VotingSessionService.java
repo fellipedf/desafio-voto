@@ -13,7 +13,9 @@ import io.swagger.model.Status;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +36,14 @@ public class VotingSessionService {
         if (meetingAgenda.isPresent()) {
             throw new ApiException(5, "Existe uma sessão de votação em andamento");
         }
-        repository.save(meetingAgendaMapper.toEntity(item));
+        Long timer = item.getTimer();
+        MeetingAgendaItemsEntity toSave = meetingAgendaMapper.toEntity(item);
+        if (ObjectUtils.isEmpty(timer)) {
+            toSave.setFinishTime(LocalDateTime.now().plusMinutes(1));
+        } else {
+            toSave.setFinishTime(LocalDateTime.now().plusMinutes(timer));
+        }
+        repository.save(toSave);
     }
 
 
