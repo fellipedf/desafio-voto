@@ -7,6 +7,7 @@ package io.swagger.api;
 
 import io.swagger.model.Error;
 import io.swagger.model.MeetingAgendaItems;
+import io.swagger.model.PatchStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.util.List;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-06T16:28:41.873Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-10T21:11:15.565Z[GMT]")
 @Validated
 public interface VotingSessionApi {
 
@@ -84,7 +85,7 @@ public interface VotingSessionApi {
     ResponseEntity<Void> insertVotingSession(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body) throws ApiException;
 
 
-    @Operation(summary = "Update a Voting Session", description = "Update a Voting Session", tags={ "Voting Session" })
+    @Operation(summary = "Update a Voting Session status", description = "Update a Voting Session", tags={ "Voting Session" })
     @ApiResponses(value = { 
         @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = MeetingAgendaItems.class))),
         
@@ -100,8 +101,8 @@ public interface VotingSessionApi {
     @RequestMapping(value = "/voting-session/{id}",
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
-        method = RequestMethod.PUT)
-    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body) throws ApiException;
+        method = RequestMethod.PATCH)
+    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody PatchStatus body) throws ApiException;
 
 }
 

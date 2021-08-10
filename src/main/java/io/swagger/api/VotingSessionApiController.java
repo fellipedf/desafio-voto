@@ -2,6 +2,7 @@ package io.swagger.api;
 
 import io.swagger.model.MeetingAgendaItems;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.model.PatchStatus;
 import io.swagger.service.VotingSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public class VotingSessionApiController implements VotingSessionApi {
     }
 
     @Override
-    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, MeetingAgendaItems body) throws ApiException {
+    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, PatchStatus body) throws ApiException {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id, body));
     }
 }

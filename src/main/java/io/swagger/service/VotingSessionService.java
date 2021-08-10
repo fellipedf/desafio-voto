@@ -8,6 +8,7 @@ import io.swagger.mapper.ItemMapper;
 import io.swagger.mapper.MeetingAgendaMapper;
 import io.swagger.model.Item;
 import io.swagger.model.MeetingAgendaItems;
+import io.swagger.model.PatchStatus;
 import io.swagger.model.Status;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
@@ -46,11 +47,12 @@ public class VotingSessionService {
         return listReturn;
     }
 
-    public MeetingAgendaItems update(String id, MeetingAgendaItems body) throws ApiException {
+    public MeetingAgendaItems update(String id, PatchStatus body) throws ApiException {
 
         Optional<MeetingAgendaItemsEntity> meetAgenda = repository.findById(Long.valueOf(id));
         if (meetAgenda.isPresent()) {
-            return meetingAgendaMapper.map(repository.save(meetingAgendaMapper.mapToUpdate(meetAgenda.get(), body)));
+            meetAgenda.get().setStatus(body.getStatus());
+            return meetingAgendaMapper.map(repository.save(meetAgenda.get()));
         } else {
             throw new ApiException(6, "Não foi possível atualizar a sessão de votação");
         }
