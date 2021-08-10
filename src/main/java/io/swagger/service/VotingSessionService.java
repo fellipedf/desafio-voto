@@ -1,6 +1,7 @@
 package io.swagger.service;
 
 import io.swagger.api.ApiException;
+import io.swagger.api.NotFoundException;
 import io.swagger.entity.ItemEntity;
 import io.swagger.entity.MeetingAgendaItemsEntity;
 import io.swagger.mapper.ItemMapper;
@@ -32,11 +33,8 @@ public class VotingSessionService {
         if (meetingAgenda.isPresent()) {
             throw new ApiException(5, "Existe uma sessão de votação em andamento");
         }
-
         repository.save(meetingAgendaMapper.toEntity(item));
     }
-
-
 
 
     public List<MeetingAgendaItems> findAll() {
@@ -57,5 +55,15 @@ public class VotingSessionService {
             throw new ApiException(6, "Não foi possível atualizar a sessão de votação");
         }
 
+    }
+
+    public MeetingAgendaItems findVotingSessionById(String id) throws NotFoundException {
+
+        Optional<MeetingAgendaItemsEntity> byId = repository.findById(Long.valueOf(id));
+        if (byId.isPresent()) {
+            return meetingAgendaMapper.map(byId.get());
+        } else {
+            throw new NotFoundException(7, "Sessão de votação não encontrada");
+        }
     }
 }

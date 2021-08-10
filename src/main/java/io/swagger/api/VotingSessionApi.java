@@ -63,7 +63,7 @@ public interface VotingSessionApi {
     @RequestMapping(value = "/voting-session/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<MeetingAgendaItems> findVotingSessionById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id);
+    ResponseEntity<MeetingAgendaItems> findVotingSessionById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) throws NotFoundException;
 
 
     @Operation(summary = "Insert a Voting Session", description = "Insert a Voting Session", tags={ "Voting Session" })

@@ -37,8 +37,8 @@ public class VotingSessionApiController implements VotingSessionApi {
     }
 
     @Override
-    public ResponseEntity<MeetingAgendaItems> findVotingSessionById(String id) {
-        return null;
+    public ResponseEntity<MeetingAgendaItems> findVotingSessionById(String id) throws NotFoundException {
+        return ResponseEntity.ok(service.findVotingSessionById(id));
     }
 
     @Override
