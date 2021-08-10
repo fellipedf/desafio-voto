@@ -1,5 +1,6 @@
 package io.swagger.api;
 
+import io.swagger.model.CountingVotes;
 import io.swagger.model.Vote;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.VoteService;
@@ -30,8 +31,8 @@ public class VotesApiController implements VotesApi {
     }
 
     @Override
-    public ResponseEntity<Vote> findVotes() {
-        return null;
+    public ResponseEntity<CountingVotes> findVotes(Long meetingAgendaId) throws ApiException {
+        return ResponseEntity.ok().body(service.countingVotes(meetingAgendaId));
     }
 
     @Override

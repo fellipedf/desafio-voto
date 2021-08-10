@@ -1,6 +1,8 @@
 package io.swagger.repository;
 
 import io.swagger.entity.VoteEntity;
+import io.swagger.model.Vote;
+import io.swagger.model.VoteEnum;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -13,6 +15,9 @@ import java.util.Optional;
 public interface VoteRepository extends CrudRepository<VoteEntity, Long>, JpaSpecificationExecutor<VoteEntity> {
 
     @Query("select v from VoteEntity v where v.associate.associateId = ?1")
-    Optional<List<VoteRepository>> findByAssociateId(Long associateId);
+    Optional<List<VoteEntity>> findByAssociateId(Long associateId);
+
+    Integer countDistinctByItem_ItemIdAndVote(Long itemId, VoteEnum vote);
+
 
 }

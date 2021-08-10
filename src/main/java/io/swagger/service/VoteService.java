@@ -6,10 +6,7 @@ import io.swagger.entity.ItemEntity;
 import io.swagger.entity.MeetingAgendaItemsEntity;
 import io.swagger.entity.VoteEntity;
 import io.swagger.mapper.ItemMapper;
-import io.swagger.model.Item;
-import io.swagger.model.Status;
-import io.swagger.model.Vote;
-import io.swagger.model.VoteItem;
+import io.swagger.model.*;
 import io.swagger.repository.AssociateRepository;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
@@ -70,12 +67,31 @@ public class VoteService {
     }
 
     private void validateAssociate(Vote item) throws ApiException {
-        Optional<List<VoteRepository>> associate = voteRepository.findByAssociateId(item.getAssociateId());
+        Optional<List<VoteEntity>> associate = voteRepository.findByAssociateId(item.getAssociateId());
         if (associate.isPresent()) {
             throw new ApiException(3, "O mesmo associado não pode votar mais de uma vez");
         }
     }
 
 
+    public CountingVotes countingVotes(Long meetingAgendaId) throws ApiException {
 
+        Optional<MeetingAgendaItemsEntity> meetings = meetingAgendaRepository.findById(meetingAgendaId);
+        CountingVotes countingVotes = new CountingVotes();
+        VotesTotal votesTotal;
+        if (meetings.isPresent()) {
+            for (ItemEntity item : meetings.get().getItems()) {
+                votesTotal = new VotesTotal();
+                votesTotal.setItemId(item.getItemId());
+                votesTotal.setItemDescription(item.getDescription());
+                votesTotal.setTotalVoteYes(voteRepository.countDistinctByItem_ItemIdAndVote(item.getItemId(), VoteEnum.YES));
+                votesTotal.setTotalVoteNo(voteRepository.countDistinctByItem_ItemIdAndVote(item.getItemId(), VoteEnum.NO));
+                countingVotes.getVotes().add(votesTotal);
+            }
+        } else {
+            throw new ApiException(2, "Sessão de votação não dosponível");
+        }
+
+        return countingVotes;
+    }
 }

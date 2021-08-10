@@ -5,6 +5,7 @@
  */
 package io.swagger.api;
 
+import io.swagger.model.CountingVotes;
 import io.swagger.model.Error;
 import io.swagger.model.Vote;
 import io.swagger.v3.oas.annotations.Operation;
@@ -33,13 +34,13 @@ import javax.validation.constraints.*;
 import java.util.List;
 import java.util.Map;
 
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-06T16:28:41.873Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-10T15:22:07.277Z[GMT]")
 @Validated
 public interface VotesApi {
 
     @Operation(summary = "List votes", description = "List votes according to the associates", tags={ "Votes" })
     @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Vote.class))),
+        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = CountingVotes.class))),
         
         @ApiResponse(responseCode = "206", description = "Partial Content", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Vote.class)))),
         
@@ -53,7 +54,7 @@ public interface VotesApi {
     @RequestMapping(value = "/votes",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Vote> findVotes();
+    ResponseEntity<CountingVotes> findVotes(@Parameter(in = ParameterIn.QUERY, description = "Meeting Agenda Items Id" ,schema=@Schema()) @Valid @RequestParam(value = "meetingAgendaId", required = false) Long meetingAgendaId) throws ApiException;
 
 
     @Operation(summary = "Insert a vote", description = "Insert a vote", tags={ "Votes" })
