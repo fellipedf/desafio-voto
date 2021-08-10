@@ -18,7 +18,7 @@ import javax.validation.constraints.*;
  */
 @Schema(description = "Represents the Vote")
 @Validated
-@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-09T21:12:03.154Z[GMT]")
+@javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2021-08-10T13:36:40.962Z[GMT]")
 
 @Builder
 public class Vote   {
@@ -33,7 +33,7 @@ public class Vote   {
 
   @JsonProperty("items")
   @Valid
-  private List<VoteItem> items = null;
+  private List<VoteItem> items = new ArrayList<VoteItem>();
 
   public Vote id(Long id) {
     this.id = id;
@@ -100,9 +100,6 @@ public class Vote   {
   }
 
   public Vote addItemsItem(VoteItem itemsItem) {
-    if (this.items == null) {
-      this.items = new ArrayList<VoteItem>();
-    }
     this.items.add(itemsItem);
     return this;
   }
@@ -111,8 +108,9 @@ public class Vote   {
    * Meeting Agenda Items
    * @return items
    **/
-  @Schema(accessMode = Schema.AccessMode.READ_ONLY, description = "Meeting Agenda Items")
-      @Valid
+  @Schema(required = true, accessMode = Schema.AccessMode.READ_ONLY, description = "Meeting Agenda Items")
+      @NotNull
+    @Valid
     public List<VoteItem> getItems() {
     return items;
   }

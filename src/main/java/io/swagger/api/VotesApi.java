@@ -71,7 +71,7 @@ public interface VotesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> insertVote(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Vote body);
+    ResponseEntity<Void> insertVote(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Vote body) throws ApiException;
 
 }
 

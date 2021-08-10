@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.service.VotingSessionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,13 +42,13 @@ public class VotingSessionApiController implements VotingSessionApi {
     }
 
     @Override
-    public ResponseEntity<Void> insertVotingSession(MeetingAgendaItems body) {
+    public ResponseEntity<Void> insertVotingSession(MeetingAgendaItems body) throws ApiException {
         service.create(body);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, MeetingAgendaItems body) {
-        return null;
+    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, MeetingAgendaItems body) throws ApiException {
+        return ResponseEntity.status(HttpStatus.OK).body(service.update(id, body));
     }
 }

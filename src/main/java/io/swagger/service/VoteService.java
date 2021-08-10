@@ -7,6 +7,7 @@ import io.swagger.entity.MeetingAgendaItemsEntity;
 import io.swagger.entity.VoteEntity;
 import io.swagger.mapper.ItemMapper;
 import io.swagger.model.Item;
+import io.swagger.model.Status;
 import io.swagger.model.Vote;
 import io.swagger.model.VoteItem;
 import io.swagger.repository.AssociateRepository;
@@ -40,16 +41,22 @@ public class VoteService {
     }
 
 
-    public void save(Vote item) {
+    public void save(Vote item) throws ApiException {
         VoteEntity.VoteEntityBuilder voteEntityBuilder = VoteEntity.builder();
 
+        validateAssociate(item);
+
+        Optional<MeetingAgendaItemsEntity> meetingAgenda = meetingAgendaRepository.findById(item.getMeetingAgendaId());
+        if (meetingAgenda.isPresent() && meetingAgenda.get().getStatus() == Status.ON) {
+            voteEntityBuilder.meetingAgenda(meetingAgenda.get());
+        } else {
+            throw new ApiException(2, "Sessão de votação não dosponível");
+        }
         Optional<AssociateEntity> associateEntity = associateRepository.findById(item.getAssociateId());
         if (associateEntity.isPresent()) {
             voteEntityBuilder.associate(associateEntity.get());
-        }
-        Optional<MeetingAgendaItemsEntity> meetingAgenda = meetingAgendaRepository.findById(item.getMeetingAgendaId());
-        if (meetingAgenda.isPresent()) {
-            voteEntityBuilder.meetingAgenda(meetingAgenda.get());
+        } else {
+            throw new ApiException(4, "Associado não cadastrado.");
         }
 
         for (VoteItem itemVote : item.getItems()) {
@@ -62,26 +69,13 @@ public class VoteService {
         }
     }
 
-    public void delete(String id) {
-        itemRepository.deleteById(Long.valueOf(id));
-    }
-
-    public Item findItemById(String id) throws ApiException {
-        Optional<ItemEntity> associateEntity = itemRepository.findById(Long.valueOf(id));
-        if (associateEntity.isPresent()) {
-            return itemMapper.map(associateEntity.get());
+    private void validateAssociate(Vote item) throws ApiException {
+        Optional<List<VoteRepository>> associate = voteRepository.findByAssociateId(item.getAssociateId());
+        if (associate.isPresent()) {
+            throw new ApiException(3, "O mesmo associado não pode votar mais de uma vez");
         }
-        throw new ApiException(201, "Item não encontado");
     }
 
 
-    public List<Item> findAll() {
-        Iterable<ItemEntity> all = itemRepository.findAll();
-        List<Item> listReturn = new ArrayList<>();
-        for (ItemEntity i : all) {
-            listReturn.add(itemMapper.map(i));
-        }
-        return listReturn;
-    }
 
 }

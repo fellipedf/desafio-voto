@@ -81,7 +81,7 @@ public interface VotingSessionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> insertVotingSession(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body);
+    ResponseEntity<Void> insertVotingSession(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body) throws ApiException;
 
 
     @Operation(summary = "Update a Voting Session", description = "Update a Voting Session", tags={ "Voting Session" })
@@ -101,7 +101,7 @@ public interface VotingSessionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PUT)
-    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body);
+    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body) throws ApiException;
 
 }
 

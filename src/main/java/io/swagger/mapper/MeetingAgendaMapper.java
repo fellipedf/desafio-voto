@@ -29,4 +29,8 @@ public class MeetingAgendaMapper {
                 .build();
     }
 
+    public MeetingAgendaItemsEntity mapToUpdate(MeetingAgendaItemsEntity meetingAgendaItemsEntity, MeetingAgendaItems body) {
+        meetingAgendaItemsEntity.setStatus(body.getStatus());
+        return meetingAgendaItemsEntity;
+    }
 }

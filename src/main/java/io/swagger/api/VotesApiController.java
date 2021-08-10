@@ -35,7 +35,7 @@ public class VotesApiController implements VotesApi {
     }
 
     @Override
-    public ResponseEntity<Void> insertVote(Vote body) {
+    public ResponseEntity<Void> insertVote(Vote body) throws ApiException {
         service.save(body);
         return ResponseEntity.ok().build();
     }

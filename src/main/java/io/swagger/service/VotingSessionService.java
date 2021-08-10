@@ -7,6 +7,7 @@ import io.swagger.mapper.ItemMapper;
 import io.swagger.mapper.MeetingAgendaMapper;
 import io.swagger.model.Item;
 import io.swagger.model.MeetingAgendaItems;
+import io.swagger.model.Status;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
 import org.springframework.stereotype.Service;
@@ -26,21 +27,16 @@ public class VotingSessionService {
         this.repository = repository;
     }
 
-    public void create(MeetingAgendaItems item) {
+    public void create(MeetingAgendaItems item) throws ApiException {
+        Optional<List<MeetingAgendaItemsEntity>> meetingAgenda = repository.findByStatus(Status.ON);
+        if (meetingAgenda.isPresent()) {
+            throw new ApiException(5, "Existe uma sessão de votação em andamento");
+        }
+
         repository.save(meetingAgendaMapper.toEntity(item));
     }
 
-    public void delete(String id) {
-        repository.deleteById(Long.valueOf(id));
-    }
 
-//    public Item findItemById(String id) throws ApiException {
-//        Optional<ItemEntity> associateEntity = repository.findById(Long.valueOf(id));
-//        if (associateEntity.isPresent()) {
-//            return meetingAgendaMapper.map(associateEntity.get());
-//        }
-//        throw new ApiException(201, "Item não encontado");
-//    }
 
 
     public List<MeetingAgendaItems> findAll() {
@@ -52,4 +48,14 @@ public class VotingSessionService {
         return listReturn;
     }
 
+    public MeetingAgendaItems update(String id, MeetingAgendaItems body) throws ApiException {
+
+        Optional<MeetingAgendaItemsEntity> meetAgenda = repository.findById(Long.valueOf(id));
+        if (meetAgenda.isPresent()) {
+            return meetingAgendaMapper.map(repository.save(meetingAgendaMapper.mapToUpdate(meetAgenda.get(), body)));
+        } else {
+            throw new ApiException(6, "Não foi possível atualizar a sessão de votação");
+        }
+
+    }
 }
