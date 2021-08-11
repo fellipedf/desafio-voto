@@ -30,71 +30,71 @@ import java.util.List;
 @Validated
 public interface ItemsApi {
 
-    @Operation(summary = "Find a Item", description = "Return a item according to the ID", tags={ "Items" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
+    @Operation(summary = "Find a Item", description = "Return a item according to the ID", tags = {"Items"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))})
     @RequestMapping(value = "/items/{id}",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<Item> findItemById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) throws ApiException;
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<Item> findItemById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required = true, schema = @Schema()) @PathVariable("id") String id);
 
 
-    @Operation(summary = "List Items", description = "List Items", tags={ "Items" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))),
-        
-        @ApiResponse(responseCode = "206", description = "Partial Content", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Item.class)))),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "412", description = "Pagination Precondition Failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
+    @Operation(summary = "List Items", description = "List Items", tags = {"Items"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Item.class))),
+
+            @ApiResponse(responseCode = "206", description = "Partial Content", content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = Item.class)))),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "412", description = "Pagination Precondition Failed", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))})
     @RequestMapping(value = "/items",
-        produces = { "application/json" }, 
-        method = RequestMethod.GET)
-    ResponseEntity<List<Item>> findItems(@Parameter(in = ParameterIn.QUERY, description = "Product name" ,schema=@Schema()) @Valid @RequestParam(value = "name", required = false) String name);
+            produces = {"application/json"},
+            method = RequestMethod.GET)
+    ResponseEntity<List<Item>> findItems(@Parameter(in = ParameterIn.QUERY, description = "Product name", schema = @Schema()) @Valid @RequestParam(value = "name", required = false) String name);
 
 
-    @Operation(summary = "Insert a Item", description = "Insert a Item", tags={ "Items" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "201", description = "Created"),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))) })
+    @Operation(summary = "Insert a Item", description = "Insert a Item", tags = {"Items"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Created"),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "422", description = "Unprocessable Entity", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class)))})
     @RequestMapping(value = "/items",
-        produces = { "application/json" }, 
-        consumes = { "application/json" }, 
-        method = RequestMethod.POST)
-    ResponseEntity<Void> insertItem(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Item body);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<Void> insertItem(@Parameter(in = ParameterIn.DEFAULT, description = "", schema = @Schema()) @Valid @RequestBody Item body);
 
 
-    @Operation(summary = "Remove a Item", description = "Remove a Item", tags={ "Items" })
-    @ApiResponses(value = { 
-        @ApiResponse(responseCode = "204", description = "No Content"),
-        
-        @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
-        
-        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
-        
-        @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))) })
+    @Operation(summary = "Remove a Item", description = "Remove a Item", tags = {"Items"})
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "No Content"),
+
+            @ApiResponse(responseCode = "400", description = "Bad Request", content = @Content(mediaType = "application/json", schema = @Schema(implementation = Error.class))),
+
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))),
+
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)))})
     @RequestMapping(value = "/items/{id}",
-        produces = { "application/json" }, 
-        method = RequestMethod.DELETE)
-    ResponseEntity<Void> removeItem(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id);
+            produces = {"application/json"},
+            method = RequestMethod.DELETE)
+    ResponseEntity<Void> removeItem(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required = true, schema = @Schema()) @PathVariable("id") String id);
 
 }
 

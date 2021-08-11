@@ -54,7 +54,7 @@ public interface VotesApi {
     @RequestMapping(value = "/votes",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<CountingVotes> findVotes(@Parameter(in = ParameterIn.QUERY, description = "Meeting Agenda Items Id" ,schema=@Schema()) @Valid @RequestParam(value = "meetingAgendaId", required = false) Long meetingAgendaId) throws ApiException;
+    ResponseEntity<CountingVotes> findVotes(@Parameter(in = ParameterIn.QUERY, description = "Meeting Agenda Items Id" ,schema=@Schema()) @Valid @RequestParam(value = "meetingAgendaId", required = false) Long meetingAgendaId);
 
 
     @Operation(summary = "Insert a vote", description = "Insert a vote", tags={ "Votes" })
@@ -72,7 +72,7 @@ public interface VotesApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> insertVote(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Vote body) throws ApiException;
+    ResponseEntity<Void> insertVote(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody Vote body);
 
 }
 

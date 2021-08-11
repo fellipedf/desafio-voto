@@ -38,18 +38,18 @@ public class VotingSessionApiController implements VotingSessionApi {
     }
 
     @Override
-    public ResponseEntity<MeetingAgendaItems> findVotingSessionById(String id) throws NotFoundException {
+    public ResponseEntity<MeetingAgendaItems> findVotingSessionById(String id) {
         return ResponseEntity.ok(service.findVotingSessionById(id));
     }
 
     @Override
-    public ResponseEntity<Void> insertVotingSession(MeetingAgendaItems body) throws ApiException {
+    public ResponseEntity<Void> insertVotingSession(MeetingAgendaItems body) {
         service.create(body);
         return ResponseEntity.ok().build();
     }
 
     @Override
-    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, PatchStatus body) throws ApiException {
+    public ResponseEntity<MeetingAgendaItems> updateVotingSession(String id, PatchStatus body) {
         return ResponseEntity.status(HttpStatus.OK).body(service.update(id, body));
     }
 }

@@ -31,12 +31,12 @@ public class VotesApiController implements VotesApi {
     }
 
     @Override
-    public ResponseEntity<CountingVotes> findVotes(Long meetingAgendaId) throws ApiException {
+    public ResponseEntity<CountingVotes> findVotes(Long meetingAgendaId) {
         return ResponseEntity.ok().body(service.countingVotes(meetingAgendaId));
     }
 
     @Override
-    public ResponseEntity<Void> insertVote(Vote body) throws ApiException {
+    public ResponseEntity<Void> insertVote(Vote body) {
         service.save(body);
         return ResponseEntity.ok().build();
     }

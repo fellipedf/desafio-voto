@@ -4,6 +4,8 @@ import io.swagger.api.ApiException;
 import io.swagger.api.NotFoundException;
 import io.swagger.entity.ItemEntity;
 import io.swagger.entity.MeetingAgendaItemsEntity;
+import io.swagger.exception.ApplicationException;
+import io.swagger.exception.ExceptionType;
 import io.swagger.mapper.ItemMapper;
 import io.swagger.mapper.MeetingAgendaMapper;
 import io.swagger.model.Item;
@@ -31,10 +33,10 @@ public class VotingSessionService {
         this.repository = repository;
     }
 
-    public void create(MeetingAgendaItems item) throws ApiException {
+    public void create(MeetingAgendaItems item)  {
         Optional<List<MeetingAgendaItemsEntity>> meetingAgenda = repository.findByStatus(Status.ON);
         if (meetingAgenda.isPresent()) {
-            throw new ApiException(5, "Existe uma sessão de votação em andamento");
+            throw new ApplicationException("Existe uma sessão de votação em andamento", ExceptionType.OTHER);
         }
         Long timer = item.getTimer();
         MeetingAgendaItemsEntity toSave = meetingAgendaMapper.toEntity(item);
@@ -56,25 +58,25 @@ public class VotingSessionService {
         return listReturn;
     }
 
-    public MeetingAgendaItems update(String id, PatchStatus body) throws ApiException {
+    public MeetingAgendaItems update(String id, PatchStatus body) {
 
         Optional<MeetingAgendaItemsEntity> meetAgenda = repository.findById(Long.valueOf(id));
         if (meetAgenda.isPresent()) {
             meetAgenda.get().setStatus(body.getStatus());
             return meetingAgendaMapper.map(repository.save(meetAgenda.get()));
         } else {
-            throw new ApiException(6, "Não foi possível atualizar a sessão de votação");
+            throw new ApplicationException("Não foi possível atualizar a sessão de votação", ExceptionType.OTHER);
         }
 
     }
 
-    public MeetingAgendaItems findVotingSessionById(String id) throws NotFoundException {
+    public MeetingAgendaItems findVotingSessionById(String id)  {
 
         Optional<MeetingAgendaItemsEntity> byId = repository.findById(Long.valueOf(id));
         if (byId.isPresent()) {
             return meetingAgendaMapper.map(byId.get());
         } else {
-            throw new NotFoundException(7, "Sessão de votação não encontrada");
+            throw new ApplicationException("Sessão de votação não encontrada", ExceptionType.OTHER);
         }
     }
 }

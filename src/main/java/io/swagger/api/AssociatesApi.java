@@ -40,7 +40,7 @@ public interface AssociatesApi {
     @RequestMapping(value = "/associates/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<Associate> findAssociateById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) throws ApiException;
+    ResponseEntity<Associate> findAssociateById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 
     @Operation(summary = "List associates", description = "List products according to the associates", tags={ "Associates" })

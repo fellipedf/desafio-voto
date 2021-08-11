@@ -31,7 +31,7 @@ public class ItemsApiController implements ItemsApi {
     }
 
     @Override
-    public ResponseEntity<Item> findItemById(String id) throws ApiException {
+    public ResponseEntity<Item> findItemById(String id) {
         return ResponseEntity.ok(service.findItemById(id));
     }
 

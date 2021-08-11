@@ -2,6 +2,8 @@ package io.swagger.service;
 
 import io.swagger.api.ApiException;
 import io.swagger.entity.AssociateEntity;
+import io.swagger.exception.ApplicationException;
+import io.swagger.exception.ExceptionType;
 import io.swagger.mapper.AssociateMapper;
 import io.swagger.model.Associate;
 import io.swagger.repository.AssociateRepository;
@@ -30,12 +32,12 @@ public class AssociateService {
         repository.deleteById(Long.valueOf(id));
     }
 
-    public Associate findAssociateById(String id) throws ApiException {
+    public Associate findAssociateById(String id) {
         Optional<AssociateEntity> associateEntity = repository.findById(Long.valueOf(id));
         if (associateEntity.isPresent()) {
             return associateMapper.map(associateEntity.get());
         }
-        throw new ApiException(201, "Usuario não encontado");
+        throw new ApplicationException("Usuario não encontado", ExceptionType.OTHER);
     }
 
 

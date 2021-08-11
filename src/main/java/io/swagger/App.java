@@ -10,6 +10,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 
 @SpringBootApplication(scanBasePackages = {"io.swagger.*"})
 @EnableOpenApi
+//@EnableFeignClients
 @ComponentScan(basePackages = { "io.swagger.*"})
 public class App implements CommandLineRunner {
 

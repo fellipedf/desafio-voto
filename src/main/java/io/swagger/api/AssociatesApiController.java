@@ -31,7 +31,7 @@ public class AssociatesApiController implements AssociatesApi {
     }
 
     @Override
-    public ResponseEntity<Associate> findAssociateById(String id) throws ApiException {
+    public ResponseEntity<Associate> findAssociateById(String id) {
         return ResponseEntity.ok(associateService.findAssociateById(id));
     }
 

@@ -2,6 +2,8 @@ package io.swagger.service;
 
 import io.swagger.api.ApiException;
 import io.swagger.entity.ItemEntity;
+import io.swagger.exception.ApplicationException;
+import io.swagger.exception.ExceptionType;
 import io.swagger.mapper.ItemMapper;
 import io.swagger.model.Item;
 import io.swagger.repository.ItemRepository;
@@ -30,12 +32,12 @@ public class ItemService {
         repository.deleteById(Long.valueOf(id));
     }
 
-    public Item findItemById(String id) throws ApiException {
+    public Item findItemById(String id) {
         Optional<ItemEntity> associateEntity = repository.findById(Long.valueOf(id));
         if (associateEntity.isPresent()) {
             return itemMapper.map(associateEntity.get());
         }
-        throw new ApiException(201, "Item não encontado");
+        throw new ApplicationException("Item não encontado", ExceptionType.OTHER);
     }
 
 

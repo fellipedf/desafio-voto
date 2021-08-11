@@ -1,19 +1,21 @@
 package io.swagger.service;
 
-import io.swagger.api.ApiException;
 import io.swagger.entity.AssociateEntity;
 import io.swagger.entity.ItemEntity;
 import io.swagger.entity.MeetingAgendaItemsEntity;
 import io.swagger.entity.VoteEntity;
+import io.swagger.exception.ApplicationException;
+import io.swagger.exception.ExceptionType;
 import io.swagger.mapper.ItemMapper;
 import io.swagger.model.*;
 import io.swagger.repository.AssociateRepository;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
 import io.swagger.repository.VoteRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,22 +40,23 @@ public class VoteService {
     }
 
 
-    public void save(Vote item) throws ApiException {
+    public void save(Vote item) {
         VoteEntity.VoteEntityBuilder voteEntityBuilder = VoteEntity.builder();
 
         validateAssociate(item);
+//        validateVotingAssociate(item.getAssociateId());
 
         Optional<MeetingAgendaItemsEntity> meetingAgenda = meetingAgendaRepository.findById(item.getMeetingAgendaId());
         if (meetingAgenda.isPresent() && meetingAgenda.get().getStatus() == Status.ON) {
             voteEntityBuilder.meetingAgenda(meetingAgenda.get());
         } else {
-            throw new ApiException(2, "Sessão de votação não dosponível");
+            throw new ApplicationException("Sessão de votação não dosponível", ExceptionType.OTHER);
         }
-        Optional<AssociateEntity> associateEntity = associateRepository.findById(item.getAssociateId());
+        Optional<AssociateEntity> associateEntity = findAssociate(item.getAssociateId());
         if (associateEntity.isPresent()) {
             voteEntityBuilder.associate(associateEntity.get());
         } else {
-            throw new ApiException(4, "Associado não cadastrado.");
+            throw new ApplicationException("Associado não cadastrado.", ExceptionType.OTHER);
         }
 
         for (VoteItem itemVote : item.getItems()) {
@@ -66,15 +69,32 @@ public class VoteService {
         }
     }
 
-    private void validateAssociate(Vote item) throws ApiException {
+
+    private void validateVotingAssociate(Long associateId) {
+        Optional<AssociateEntity> associate = findAssociate(associateId);
+        if (associate.isPresent()) {
+        RestTemplate restTemplate = new RestTemplate();
+        String fooResourceUrl = "https://user-info.herokuapp.com/users";
+        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + "/" +associateId, String.class);
+            String body = response.getBody();
+        }
+
+    }
+
+    private Optional<AssociateEntity> findAssociate(Long associateId) {
+        Optional<AssociateEntity> associateEntity = associateRepository.findById(associateId);
+        return associateEntity;
+    }
+
+    private void validateAssociate(Vote item) {
         Optional<List<VoteEntity>> associate = voteRepository.findByAssociateId(item.getAssociateId());
         if (associate.isPresent()) {
-            throw new ApiException(3, "O mesmo associado não pode votar mais de uma vez");
+            throw new ApplicationException("O mesmo associado não pode votar mais de uma vez", ExceptionType.OTHER);
         }
     }
 
 
-    public CountingVotes countingVotes(Long meetingAgendaId) throws ApiException {
+    public CountingVotes countingVotes(Long meetingAgendaId) {
 
         Optional<MeetingAgendaItemsEntity> meetings = meetingAgendaRepository.findById(meetingAgendaId);
         CountingVotes countingVotes = new CountingVotes();
@@ -89,7 +109,7 @@ public class VoteService {
                 countingVotes.getVotes().add(votesTotal);
             }
         } else {
-            throw new ApiException(2, "Sessão de votação não dosponível");
+            throw new ApplicationException("Sessão de votação não dosponível", ExceptionType.OTHER);
         }
 
         return countingVotes;

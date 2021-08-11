@@ -64,7 +64,7 @@ public interface VotingSessionApi {
     @RequestMapping(value = "/voting-session/{id}",
         produces = { "application/json" }, 
         method = RequestMethod.GET)
-    ResponseEntity<MeetingAgendaItems> findVotingSessionById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id) throws NotFoundException;
+    ResponseEntity<MeetingAgendaItems> findVotingSessionById(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id);
 
 
     @Operation(summary = "Insert a Voting Session", description = "Insert a Voting Session", tags={ "Voting Session" })
@@ -82,7 +82,7 @@ public interface VotingSessionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.POST)
-    ResponseEntity<Void> insertVotingSession(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body) throws ApiException;
+    ResponseEntity<Void> insertVotingSession(@Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody MeetingAgendaItems body);
 
 
     @Operation(summary = "Update a Voting Session status", description = "Update a Voting Session", tags={ "Voting Session" })
@@ -102,7 +102,7 @@ public interface VotingSessionApi {
         produces = { "application/json" }, 
         consumes = { "application/json" }, 
         method = RequestMethod.PATCH)
-    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody PatchStatus body) throws ApiException;
+    ResponseEntity<MeetingAgendaItems> updateVotingSession(@Parameter(in = ParameterIn.PATH, description = "Unique identifier", required=true, schema=@Schema()) @PathVariable("id") String id, @Parameter(in = ParameterIn.DEFAULT, description = "", schema=@Schema()) @Valid @RequestBody PatchStatus body);
 
 }
 
