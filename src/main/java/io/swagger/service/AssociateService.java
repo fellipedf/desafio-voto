@@ -1,12 +1,12 @@
 package io.swagger.service;
 
-import io.swagger.api.ApiException;
 import io.swagger.entity.AssociateEntity;
 import io.swagger.exception.ApplicationException;
 import io.swagger.exception.ExceptionType;
 import io.swagger.mapper.AssociateMapper;
 import io.swagger.model.Associate;
 import io.swagger.repository.AssociateRepository;
+import io.swagger.util.CpfValidatorIntegration;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -18,13 +18,16 @@ import java.util.Optional;
 public class AssociateService {
     private final AssociateRepository repository;
     private final AssociateMapper associateMapper;
+    private final CpfValidatorIntegration cpfValidatorIntegration;
 
-    public AssociateService(AssociateRepository repository, AssociateMapper associateMapper) {
+    public AssociateService(AssociateRepository repository, AssociateMapper associateMapper, CpfValidatorIntegration cpfValidatorIntegration) {
         this.repository = repository;
         this.associateMapper = associateMapper;
+        this.cpfValidatorIntegration = cpfValidatorIntegration;
     }
 
     public void save(Associate associate) {
+        cpfValidatorIntegration.validate(associate.getCpfCnpj());
         repository.save(associateMapper.toEntity(associate));
     }
 

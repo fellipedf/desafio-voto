@@ -12,9 +12,8 @@ import io.swagger.repository.AssociateRepository;
 import io.swagger.repository.ItemRepository;
 import io.swagger.repository.MeetingAgendaRepository;
 import io.swagger.repository.VoteRepository;
-import org.springframework.http.ResponseEntity;
+import io.swagger.util.CpfValidatorIntegration;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,17 +25,19 @@ public class VoteService {
     private final MeetingAgendaRepository meetingAgendaRepository;
     private final ItemRepository itemRepository;
     private final VoteRepository voteRepository;
+    private final CpfValidatorIntegration cpfValidator;
     private final ItemMapper itemMapper;
 
     public VoteService(ItemMapper itemMapper,
                        AssociateRepository associateRepository,
                        MeetingAgendaRepository meetingAgendaRepository,
-                       ItemRepository itemRepository, VoteRepository voteRepository) {
+                       ItemRepository itemRepository, VoteRepository voteRepository, CpfValidatorIntegration cpfValidator) {
         this.associateRepository = associateRepository;
         this.meetingAgendaRepository = meetingAgendaRepository;
         this.itemRepository = itemRepository;
         this.itemMapper = itemMapper;
         this.voteRepository = voteRepository;
+        this.cpfValidator = cpfValidator;
     }
 
 
@@ -44,7 +45,6 @@ public class VoteService {
         VoteEntity.VoteEntityBuilder voteEntityBuilder = VoteEntity.builder();
 
         validateAssociate(item);
-//        validateVotingAssociate(item.getAssociateId());
 
         Optional<MeetingAgendaItemsEntity> meetingAgenda = meetingAgendaRepository.findById(item.getMeetingAgendaId());
         if (meetingAgenda.isPresent() && meetingAgenda.get().getStatus() == Status.ON) {
@@ -54,6 +54,7 @@ public class VoteService {
         }
         Optional<AssociateEntity> associateEntity = findAssociate(item.getAssociateId());
         if (associateEntity.isPresent()) {
+            cpfValidator.validateVotingAssociate(associateEntity.get().getCpfCnpj());
             voteEntityBuilder.associate(associateEntity.get());
         } else {
             throw new ApplicationException("Associado não cadastrado.", ExceptionType.OTHER);
@@ -70,24 +71,14 @@ public class VoteService {
     }
 
 
-    private void validateVotingAssociate(Long associateId) {
-        Optional<AssociateEntity> associate = findAssociate(associateId);
-        if (associate.isPresent()) {
-        RestTemplate restTemplate = new RestTemplate();
-        String fooResourceUrl = "https://user-info.herokuapp.com/users";
-        ResponseEntity<String> response = restTemplate.getForEntity(fooResourceUrl + "/" +associateId, String.class);
-            String body = response.getBody();
-        }
 
-    }
 
     private Optional<AssociateEntity> findAssociate(Long associateId) {
-        Optional<AssociateEntity> associateEntity = associateRepository.findById(associateId);
-        return associateEntity;
+        return associateRepository.findById(associateId);
     }
 
     private void validateAssociate(Vote item) {
-        Optional<List<VoteEntity>> associate = voteRepository.findByAssociateId(item.getAssociateId());
+        Optional<List<VoteEntity>> associate = voteRepository.findByAssociateId(item.getAssociateId(), item.getMeetingAgendaId());
         if (associate.isPresent()) {
             throw new ApplicationException("O mesmo associado não pode votar mais de uma vez", ExceptionType.OTHER);
         }

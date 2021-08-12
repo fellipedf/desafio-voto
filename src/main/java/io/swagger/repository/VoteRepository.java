@@ -14,8 +14,8 @@ import java.util.Optional;
 @Repository
 public interface VoteRepository extends CrudRepository<VoteEntity, Long>, JpaSpecificationExecutor<VoteEntity> {
 
-    @Query("select v from VoteEntity v where v.associate.associateId = ?1")
-    Optional<List<VoteEntity>> findByAssociateId(Long associateId);
+    @Query("select v from VoteEntity v where v.associate.associateId = ?1 and v.meetingAgenda.meetingAgendaId = ?2")
+    Optional<List<VoteEntity>> findByAssociateId(Long associateId, Long meetingAgendaId);
 
     Integer countDistinctByItem_ItemIdAndVote(Long itemId, VoteEnum vote);
 
